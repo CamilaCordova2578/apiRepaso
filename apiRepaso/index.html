@@ -11,6 +11,40 @@
     <p id="loading" style="display: 
     none;">Cargando...</p>
     <ul id = "digimonList"></ul>
+    <script>
+        document.getElementById("getidDigimon").addEventListener('click', () => {
+            document.getElementById("loading").style.display = 'block';
+    
+            fetch('https://digi-api.com/api/v1/digimon/299')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(JSON.stringify(data, null, 2)); // Mostrar datos en consola
+    
+                    const digimonList = document.getElementById("digimonList");
+                    digimonList.innerHTML = ""; // Limpiar la lista antes de agregar nuevos elementos
+                    
+                    // Verificar si `data` es un array o un objeto
+                    if (Array.isArray(data)) {
+                        data.forEach(digimon => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `<p><strong>${digimon.id}</strong> - Nombre: ${digimon.name}</p>`;
+                            digimonList.appendChild(li);
+                        });
+                    } else { // Si `data` no es un array, pero tiene datos de un solo Digimon
+                        const li = document.createElement('li');
+                        li.innerHTML = `<p><strong>${data.id}</strong> - Nombre: ${data.name}</p>`;
+                        digimonList.appendChild(li);
+                    }
+    
+                    document.getElementById("loading").style.display = 'none'; // Ocultar carga
+                })
+                .catch(error => {
+                    console.error("Error: ", error);
+                    document.getElementById("loading").style.display = 'none'; // Ocultar carga en caso de error
+                });
+        });
+    </script>
+    
 
 
 </body>
